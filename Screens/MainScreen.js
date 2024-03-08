@@ -15,18 +15,27 @@ import { Permissions } from 'expo';
 import * as FileSystem from 'expo-file-system';
 import * as Notifications from 'expo-notifications';
 import { FontAwesome5 , AntDesign , MaterialCommunityIcons , FontAwesome6 , MaterialIcons    } from '@expo/vector-icons'
-
 import Constants from 'expo-constants';
 //import RNFS from 'react-native-fs';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
 function MainScreen(){
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }),
+  });
+  function scheduleNotificationHandler(response){
+    console.log("Notifications")
+  Notifications.scheduleNotificationAsync({
+    content:{ title:response , body:"Nearby Sound"  , data:{Username : "Mostafa"} },
+    trigger:{
+      seconds:1
+    }
+  })
+  
+  }
     const navigation=useNavigation()
     const [pressedtext , setpressedtext]= useState("Click To Record");
     const [pred , setpred]= useState("");
@@ -90,13 +99,14 @@ function MainScreen(){
                 else if (response.pred  === "Doorbell") {
                   return(
                     //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
-                    <MaterialIcons style ={styles.ionstyle} name="doorbell" size={50} color="black" />
+                    <MaterialCommunityIcons  style ={styles.ionstyle} name="doorbell" size={50} color="black" />
+
                     )
                    ;
                   }
                   else if (response.pred  === "Glass") {
                     return(
-                      //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
+                 
                       <Image style={styles.soundimage} source={require("../Images/glass.png") } />
                       )
                      ;
@@ -174,15 +184,8 @@ function MainScreen(){
           if (response.status===200) {
             console.log('File uploaded successfully');
             setpred(response.data.prediction)
-            //PredictionImage(response.data.prediction)
-            // Notifications.scheduleNotificationAsync({
-            //   content: {
-            //     title: 'Prediction',
-            //     body: response.data.prediction,
-            //   },
-            //   trigger: 1,
-            //   expopushtoken
-            // });
+            scheduleNotificationHandler(response.data.prediction)
+           
           } else {
             console.error('Failed to upload file');
           }
