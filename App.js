@@ -8,15 +8,18 @@ import MainScreen from './Screens/MainScreen';
 import Recording from './Components/Recording';
 import OptionsScreen from './Screens/OptionsScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 
 export default function App() {
   const stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
+  const {t} = useTranslation();
+  const Home = t('Home');
   function ScreensBT(){
   return (
     <Tab.Navigator>
       <Tab.Screen name="MainScreen" component={MainScreen}  options={{
-        title:'Home',
+        title:t('Home'),
         tabBarIcon: () => { 
           return ( 
             <Ionicons 
@@ -28,7 +31,7 @@ export default function App() {
         }, 
         headerShown:false , tabBarStyle: { position: 'absolute'  }}}/>
       <Tab.Screen name="OptionsScreen" component={OptionsScreen}  options={{
-        title:'Options',
+        title:t('Options'),
         tabBarIcon: () => { 
           return ( 
             <Ionicons 

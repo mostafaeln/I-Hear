@@ -16,6 +16,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Notifications from 'expo-notifications';
 import { FontAwesome5 , AntDesign , MaterialCommunityIcons , FontAwesome6 , MaterialIcons    } from '@expo/vector-icons'
 import Constants from 'expo-constants';
+import { useTranslation } from "react-i18next";
 //import RNFS from 'react-native-fs';
 
 function MainScreen(){
@@ -236,7 +237,7 @@ function MainScreen(){
           
   
           setRecording(recording);
-          setpressedtext("Recording")
+          setpressedtext(t('Recording'))
         } else {
           setMessage("Please grant permission to app to access microphone");
         }
@@ -247,7 +248,7 @@ function MainScreen(){
   
     async function stopRecording() {
       setRecording(undefined);
-      setpressedtext("Start Recording")
+      setpressedtext(t('Start Recording'))
       await recording.stopAndUnloadAsync();
   
       let updatedRecordings = [...recordings];
@@ -280,7 +281,7 @@ function MainScreen(){
       
         return (
           <View style={styles.row}>
-            <Text style={styles.texting}> Recording - {lastRecording.duration}</Text>
+            <Text style={styles.texting}> {t('Record')} - {lastRecording.duration}</Text>
             <Button style={styles.button} onPress={() => lastRecording.sound.replayAsync()} title="Play" />
             <Button style={styles.button} onPress={() => Sharing.shareAsync(lastRecording.file)} title="Share" />
             <Button style={styles.button} onPress={handleButtonPress}  title="Predict" />
@@ -288,22 +289,7 @@ function MainScreen(){
         );
       }
       
-  
-    // var IsRecording=false;
-    // function pressbutton(){
-    // console.log("pressed")
-    // if(IsRecording==false){
-    //     setpressedtext("Recording")
-    //     IsRecording=true;
-       
-    // }
-    // else{
-    //     setpressedtext("Start Recording")
-    //     IsRecording=false;
-
-    // }
-    // navigation.navigate("Recording")
-    // }
+  const {t} = useTranslation();
   return (
     <View style={styles.home}>
     <Image
@@ -316,7 +302,7 @@ function MainScreen(){
       contentFit="cover"
       source={require("../Images/ihear-1.png")}
     />
-
+    
     
     <Text style={styles.startListening}>{pressedtext}</Text>
     {/* <View style={[styles.kebabMenu, styles.kebabMenuLayout]}>

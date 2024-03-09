@@ -1,5 +1,9 @@
-{
+{ 
+  "Home":"الرئيسية",
+  "Click to Record" : "اضغط للتسجيل",   
+  "Start Recording" : "ابدأ التسجيل",
     "Recording": "يتم التسجيل",
+     "Record" : "التسجيل",
      "Options" : "الاعدادات",
     "Language": "اللغة",
     "English": "الانجليزية",

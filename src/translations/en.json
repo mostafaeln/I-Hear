@@ -1,9 +1,13 @@
-{
+{   "Home" : "Home",
+    "Click to Record" : "Click to Record", 
+    "Start Recording" : "Start Recording", 
     "Recording": "Recording",
+     "Record":"Record",
      "Options" : "Options",
     "Language": "Language",
     "English": "English",
     "Arabic": "Arabic",
     "French": "French",
     "Spanish": "Spanish"
+    
   }
