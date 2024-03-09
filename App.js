@@ -8,6 +8,7 @@ import MainScreen from './Screens/MainScreen';
 import Recording from './Components/Recording';
 import OptionsScreen from './Screens/OptionsScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
+
 export default function App() {
   const stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
@@ -50,11 +51,11 @@ export default function App() {
    
     <NavigationContainer>
      
-      <stack.Navigator screenOptions={{
+      <stack.Navigator  screenOptions={{
       
       }}>
       <stack.Screen name="ScreensBT" component={ScreensBT} options={{headerShown:false}} />
-      <stack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}}></stack.Screen>
+      {/* <stack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}}></stack.Screen> */}
       
         <stack.Screen name="MainScreen" component={MainScreen} options={{headerShown:false}} ></stack.Screen>
         <stack.Screen name="Recording" component={Recording} options={{headerShown:false}} ></stack.Screen>

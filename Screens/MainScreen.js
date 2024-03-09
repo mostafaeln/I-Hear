@@ -719,5 +719,3 @@ const styles = StyleSheet.create({
     }
 
 });
-
-
