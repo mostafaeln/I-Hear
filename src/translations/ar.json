@@ -5,9 +5,22 @@
     "Recording": "يتم التسجيل",
      "Record" : "التسجيل",
      "Options" : "الاعدادات",
+     "Nearby Sound": "صوت حولك",
+
+
     "Language": "اللغة",
     "English": "الانجليزية",
     "Arabic": "العربية",
     "French": "الفرنسية",
-    "Spanish": "الاسبانية"
+    "Spanish": "الاسبانية",
+
+    "Car_horn": "بوق السيارة",
+    "Doorbell": "جرس الباب",
+    "Cat": "قطة",
+    "crying": "بكاء",
+    "Dogs": "كلب",
+    "Glass": "زجاج",
+    "Water": "ماء",
+    "Ringtone": "نغمة الرنين",
+    "Siren": "صفارة إنذار"  
   }

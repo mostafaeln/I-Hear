@@ -4,10 +4,21 @@
     "Recording": "Recording",
      "Record":"Record",
      "Options" : "Options",
+     "Nearby Sound": "Nearby Sound",
+
     "Language": "Language",
     "English": "English",
     "Arabic": "Arabic",
     "French": "French",
-    "Spanish": "Spanish"
-    
+    "Spanish": "Spanish",
+
+    "Car_horn":"Car horn",
+    "Doorbell": "Doorbell",
+    "Cat": "Cat",
+    "crying": "Crying",
+    "Dogs": "Dog",
+    "Glass": "Glass",
+    "Water": "Water",
+    "Ringtone": "Ringtone",
+    "Siren": "Siren"
   }

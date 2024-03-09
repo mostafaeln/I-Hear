@@ -5,12 +5,15 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { NativeModules } from 'react-native';
 import i18next from '../src/i18n.config';
 import { useTranslation } from 'react-i18next';
+
+
 const languageOptions = [
   { label: 'English', value: 'en' },
   { label: 'Spanish', value: 'es' },
   { label: 'French', value: 'fr' },
   { label: 'German', value: 'de' },
   { label: 'Arabic', value: 'ar' },
+  { label: 'Italy', value: 'it'}
 ];
 function changelanguage(language){
     if(language==="en") {
@@ -19,7 +22,21 @@ function changelanguage(language){
     else if(language==="ar") {
         i18next.changeLanguage('ar')
     }
+    else if (language==="de"){
+      i18next.changeLanguage('de')
+    }
+    else if (language==="it"){
+      i18next.changeLanguage('it')
+    }
+    else if (language==="es"){
+      i18next.changeLanguage('es')
+    }
+    else if (language==="fr"){
+      i18next.changeLanguage('fr')
+    }
 }
+
+
 const OptionsScreen = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [isFocus, setIsFocus] = useState(false);
@@ -28,7 +45,7 @@ const OptionsScreen = () => {
     <SafeAreaView style={{ flex: 1, paddingTop: 20 }}>
         
       <View style={styles.container}>
-        <Text style={styles.optionsText}>Options</Text>
+        <Text style={styles.optionsText}>{t("Options")}</Text>
         <View style={styles.optionContainer}>
           <View style={styles.optionSection}>
             <Text style={styles.sectionTitle}>{t('Language')}</Text>

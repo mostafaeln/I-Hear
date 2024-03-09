@@ -30,7 +30,7 @@ function MainScreen(){
   function scheduleNotificationHandler(response){
     console.log("Notifications")
   Notifications.scheduleNotificationAsync({
-    content:{ title:response , body:"Nearby Sound"  , data:{Username : "Mostafa"} },
+    content:{ title:t(response) , body:t("Nearby Sound")  , data:{Username : "Mostafa"} },
     trigger:{
       seconds:1
     }
@@ -167,7 +167,7 @@ function MainScreen(){
         });
         
         try {
-          const response = await axios.post('http://192.168.1.7:5000/upload', formData, {
+          const response = await axios.post('http://192.168.1.4:5000/upload', formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             }
@@ -347,7 +347,7 @@ function MainScreen(){
     <Text style={styles.outputText}>The Sound Surrounding you is</Text>
     <View style={styles.sound}>
       {PredictionImage({pred})}
-      <Text style={styles.resulttext}>{pred}</Text>
+      <Text style={styles.resulttext}>{t(pred)}</Text>
     </View>
   </View>
 ) : null}  
