@@ -238,6 +238,9 @@ function MainScreen(){
   
           setRecording(recording);
           setpressedtext(t('Recording'))
+        //   setTimeout(() => {
+        //     stopRecording()
+        // }, 5000);
         } else {
           setMessage("Please grant permission to app to access microphone");
         }
@@ -262,6 +265,11 @@ function MainScreen(){
       
       
       setRecordings(updatedRecordings);
+      handleButtonPress();
+    //   setTimeout(() => {
+    //     startRecording()
+    // }, 2000);
+
     }
   
     function getDurationFormatted(millis) {

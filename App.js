@@ -14,7 +14,6 @@ export default function App() {
   const stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const {t} = useTranslation();
-  const Home = t('Home');
   function ScreensBT(){
   return (
     <Tab.Navigator>

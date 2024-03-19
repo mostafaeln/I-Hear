@@ -5,7 +5,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { NativeModules } from 'react-native';
 import i18next from '../src/i18n.config';
 import { useTranslation } from 'react-i18next';
-
+import Switch from '../Components/Switch';
 
 const languageOptions = [
   { label: 'English', value: 'en' },
@@ -35,7 +35,15 @@ function changelanguage(language){
       i18next.changeLanguage('fr')
     }
 }
+function onSelectSwitch(index){
+if(index ===1){
+  console.log("outdoors")
+}
+else if(index ===2){
+  console.log("indoors")
+}
 
+}
 
 const OptionsScreen = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
@@ -82,8 +90,20 @@ const OptionsScreen = () => {
               />
             </View>
           </View>
+         
           {/* Add more option sections here */}
         </View>
+        <View style ={styles.mode}>
+            <Text style={styles.text}>Select Mode</Text>
+            <Switch
+          selectionMode={1}
+          roundCorner={true}
+          option1={'Outdoors'}
+          option2={'Indoors'}
+          onSelectSwitch={onSelectSwitch}
+          selectionColor={'blue'}
+        />
+          </View>
       </View>
     </SafeAreaView>
   );
@@ -92,6 +112,17 @@ const OptionsScreen = () => {
 export default OptionsScreen;
 
 const styles = StyleSheet.create({
+  mode:{
+    flexDirection:'row',
+    alignContent:'space-between'
+  },
+  text:{
+    fontSize:18 , 
+    fontWeight:'bold',
+    left:10,
+    marginTop:10,
+    marginRight:30
+  },
   container: {
     flex: 1,
     backgroundColor: 'white',
