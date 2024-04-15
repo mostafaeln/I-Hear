@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)
 
 class_labels_all = ['Car_horn', 'Doorbell', 'Cat', 'crying', 'Dogs', 'Glass', 'Water', 'Ringtone', 'Siren']
-model_all = load_model("MobileNetV2_best_89.6_205.h5")
+model_all = load_model("MobileNetV2.h5")
 
 class_labels_indoor = ['Cat', 'Dogs','Doorbell','Fire_Alarm', 'Glass', 'Ringtone', 'Water','crying' ]
 model_indoor = load_model("MobileNetV2_indoor.h5")
@@ -47,7 +47,7 @@ def upload_file():
             return jsonify({'prediction': class_labels_outdoor[prediction_class]})
         
         else:
-            jsonify({"error": "cannot find mode param"})
+            return jsonify({"error": "cannot find mode param"})
             
 
 
