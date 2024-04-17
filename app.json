@@ -7,9 +7,8 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./Images/ihear-2.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "left":"40",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
@@ -20,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./Images/Ihear.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },

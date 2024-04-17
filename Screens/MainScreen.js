@@ -16,10 +16,9 @@ import * as FileSystem from 'expo-file-system';
 import * as Notifications from 'expo-notifications';
 import { FontAwesome5 , AntDesign , MaterialCommunityIcons , FontAwesome6 , MaterialIcons    } from '@expo/vector-icons'
 import Constants from 'expo-constants';
-import { useTranslation } from "react-i18next";
 //import RNFS from 'react-native-fs';
 
-function MainScreen(){
+function MainScreen({route}){
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -30,13 +29,38 @@ function MainScreen(){
   function scheduleNotificationHandler(response){
     console.log("Notifications")
   Notifications.scheduleNotificationAsync({
-    content:{ title:t(response) , body:t("Nearby Sound")  , data:{Username : "Mostafa"} },
+    content:{ title:response , body:"Nearby Sound"  , data:{Username : "Mostafa"} },
     trigger:{
       seconds:1
     }
   })
   
   }
+  const [mode, setMode] = React.useState("All");
+  useEffect(()=>{
+   
+    if(route.params?.mode){
+      console.log("received mode : ", route.params.mode)
+      if (route.params.mode === "Indoors"){
+        setMode("indoors")
+       
+      }
+      else if (route.params.mode === "Outdoors"){
+        setMode("outdoors")
+       // console.log(" mode : ", mode);
+      }
+      else if (route.params.mode === "All"){
+        setMode("All")
+       // console.log(" mode : ", mode);
+      }
+   
+    }
+    else{
+    console.log("No mode Received" )
+    }
+
+    //console.log(" mode : ", mode); 
+   } , [route.params?.mode])
     const navigation=useNavigation()
     const [pressedtext , setpressedtext]= useState("Click To Record");
     const [pred , setpred]= useState("");
@@ -83,6 +107,13 @@ function MainScreen(){
               )
              ;
             }
+            else if (response.pred  === "Fire_Alarm") {
+              return(
+                //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
+                <FontAwesome5  style ={styles.ionstyle} name="fire-extinguisher" size={50} color="black" />
+                )
+               ;
+              }
             else if (response.pred  === "Siren") {
               return(
                 //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
@@ -106,11 +137,11 @@ function MainScreen(){
                    ;
                   }
                   else if (response.pred  === "Glass") {
-                    return(
+                    // return(
                  
-                      <Image style={styles.soundimage} source={require("../Images/glass.png") } />
-                      )
-                     ;
+                    //   <Image style={styles.soundimage} source={require("glass.png") } />
+                    //   )
+                    //  ;
                     }
       else {
       return(
@@ -165,9 +196,11 @@ function MainScreen(){
           type: 'audio/wav',
           data:fileContents
         });
-        
+        if(mode=== "All") {
+        console.log("all mode is here")
+      
         try {
-          const response = await axios.post('http://192.168.1.4:5000/upload', formData, {
+          const response = await axios.post('http://3.80.70.14/upload?mode=All', formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             }
@@ -186,7 +219,7 @@ function MainScreen(){
             console.log('File uploaded successfully');
             setpred(response.data.prediction)
             scheduleNotificationHandler(response.data.prediction)
-           
+          
           } else {
             console.error('Failed to upload file');
           }
@@ -194,6 +227,71 @@ function MainScreen(){
           console.error('Error fetching data:', error);
           setpred("Error")
         }
+      }
+      else if(mode=== "indoors") {
+
+        console.log("current mode" , mode)
+        try {
+          const response = await axios.post('http://3.80.70.14/upload?mode=indoors', formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            }
+          });
+          //const responseData = await response.text();
+          //console.log('Response:', responseData);
+          console.log('Response:', response.data);
+          console.log(response.status)
+          setResult(true)
+          
+          
+          //setpred(response.data)
+          // const data = await response.json();
+          // console.log('Response:', data['message']);
+          if (response.status===200) {
+            console.log('File uploaded successfully');
+            setpred(response.data.prediction)
+            scheduleNotificationHandler(response.data.prediction)
+          
+          } else {
+            console.error('Failed to upload file');
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          setpred("Error")
+        }
+      }
+      else if(mode=== "outdoors") {
+      console.log("current mode" , mode)
+      
+        try {
+          const response = await axios.post('http://3.80.70.14/upload?mode=outdoors', formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            }
+          });
+          //const responseData = await response.text();
+          //console.log('Response:', responseData);
+          console.log('Response:', response.data);
+          console.log(response.status)
+          setResult(true)
+          
+          
+          //setpred(response.data)
+          // const data = await response.json();
+          // console.log('Response:', data['message']);
+          if (response.status===200) {
+            console.log('File uploaded successfully');
+            setpred(response.data.prediction)
+            scheduleNotificationHandler(response.data.prediction)
+          
+          } else {
+            console.error('Failed to upload file');
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+          setpred("Error")
+        }
+      }
 
             
       
@@ -209,6 +307,7 @@ function MainScreen(){
     
     async function startRecording() {
       try {
+        setResult(false);
         const permission = await Audio.requestPermissionsAsync();
         const { status } = await Notifications.requestPermissionsAsync();
         if (status !== 'granted') {
@@ -237,10 +336,7 @@ function MainScreen(){
           
   
           setRecording(recording);
-          setpressedtext(t('Recording'))
-        //   setTimeout(() => {
-        //     stopRecording()
-        // }, 5000);
+          setpressedtext("Recording")
         } else {
           setMessage("Please grant permission to app to access microphone");
         }
@@ -251,7 +347,7 @@ function MainScreen(){
   
     async function stopRecording() {
       setRecording(undefined);
-      setpressedtext(t('Start Recording'))
+      setpressedtext("Start Recording")
       await recording.stopAndUnloadAsync();
   
       let updatedRecordings = [...recordings];
@@ -265,11 +361,6 @@ function MainScreen(){
       
       
       setRecordings(updatedRecordings);
-      handleButtonPress();
-    //   setTimeout(() => {
-    //     startRecording()
-    // }, 2000);
-
     }
   
     function getDurationFormatted(millis) {
@@ -289,7 +380,7 @@ function MainScreen(){
       
         return (
           <View style={styles.row}>
-            <Text style={styles.texting}> {t('Record')} - {lastRecording.duration}</Text>
+            <Text style={styles.texting}> Recording - {lastRecording.duration}</Text>
             <Button style={styles.button} onPress={() => lastRecording.sound.replayAsync()} title="Play" />
             <Button style={styles.button} onPress={() => Sharing.shareAsync(lastRecording.file)} title="Share" />
             <Button style={styles.button} onPress={handleButtonPress}  title="Predict" />
@@ -297,7 +388,22 @@ function MainScreen(){
         );
       }
       
-  const {t} = useTranslation();
+  
+    // var IsRecording=false;
+    // function pressbutton(){
+    // console.log("pressed")
+    // if(IsRecording==false){
+    //     setpressedtext("Recording")
+    //     IsRecording=true;
+       
+    // }
+    // else{
+    //     setpressedtext("Start Recording")
+    //     IsRecording=false;
+
+    // }
+    // navigation.navigate("Recording")
+    // }
   return (
     <View style={styles.home}>
     <Image
@@ -310,7 +416,7 @@ function MainScreen(){
       contentFit="cover"
       source={require("../Images/ihear-1.png")}
     />
-    
+
     
     <Text style={styles.startListening}>{pressedtext}</Text>
     {/* <View style={[styles.kebabMenu, styles.kebabMenuLayout]}>
@@ -355,7 +461,7 @@ function MainScreen(){
     <Text style={styles.outputText}>The Sound Surrounding you is</Text>
     <View style={styles.sound}>
       {PredictionImage({pred})}
-      <Text style={styles.resulttext}>{t(pred)}</Text>
+      <Text style={styles.resulttext}>{pred}</Text>
     </View>
   </View>
 ) : null}  
@@ -713,3 +819,5 @@ const styles = StyleSheet.create({
     }
 
 });
+
+

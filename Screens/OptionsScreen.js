@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView, Button , FlatList, Pressable} from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { NativeModules } from 'react-native';
-import i18next from '../src/i18n.config';
-import { useTranslation } from 'react-i18next';
+//import { NativeModules } from 'react-native';
+//import i18next from '../src/i18n.config';
+//import { useTranslation } from 'react-i18next';
 import Switch from '../Components/Switch';
+import { useNavigation } from '@react-navigation/native'
+import { ColorPicker } from 'react-native-color-picker'
+import { SliderBase } from '@react-native-community/slider';
 
 const languageOptions = [
   { label: 'English', value: 'en' },
@@ -15,48 +18,138 @@ const languageOptions = [
   { label: 'Arabic', value: 'ar' },
   { label: 'Italy', value: 'it'}
 ];
-function changelanguage(language){
-    if(language==="en") {
-        i18next.changeLanguage('en')
-    }
-    else if(language==="ar") {
-        i18next.changeLanguage('ar')
-    }
-    else if (language==="de"){
-      i18next.changeLanguage('de')
-    }
-    else if (language==="it"){
-      i18next.changeLanguage('it')
-    }
-    else if (language==="es"){
-      i18next.changeLanguage('es')
-    }
-    else if (language==="fr"){
-      i18next.changeLanguage('fr')
-    }
-}
-function onSelectSwitch(index){
-if(index ===1){
-  console.log("outdoors")
-}
-else if(index ===2){
-  console.log("indoors")
-}
-
-}
+// function changelanguage(language){
+//     if(language==="en") {
+//         i18next.changeLanguage('en')
+//     }
+//     else if(language==="ar") {
+//         i18next.changeLanguage('ar')
+//     }
+//     else if (language==="de"){
+//       i18next.changeLanguage('de')
+//     }
+//     else if (language==="it"){
+//       i18next.changeLanguage('it')
+//     }
+//     else if (language==="es"){
+//       i18next.changeLanguage('es')
+//     }
+//     else if (language==="fr"){
+//       i18next.changeLanguage('fr')
+//     }
+// }
+const Data = [
+    {
+        id: '1',
+        title: 'Car Horn',
+        color:'#3db2ff'
+      },
+      {
+        id: '2',
+        title: 'Cat',
+        color:'#3db2ff'
+      },
+      {
+        id: '3',
+        title: 'Dog',
+        color:'#3db2ff'
+      },
+      {
+        id: '4',
+        title: 'Doorbell',
+        color:'#3db2ff'
+      },
+      {
+        id: '5',
+        title: 'Glass',
+        color:'#3db2ff'
+      },
+      {
+        id: '6',
+        title: 'crying',
+        color:'#3db2ff'
+      },
+      {
+        id: '7',
+        title: 'Fire Alarm',
+        color:'#3db2ff'
+      },
+      {
+        id: '8',
+        title: 'Ringtone',
+        color:'#3db2ff' 
+    },
+      {
+        id: '9',
+        title: 'Siren',
+        color:'#3db2ff'
+      },
+      {
+        id: '10',
+        title: 'Water',
+        color:'#3db2ff'
+      },
+     
+    
+    ]
 
 const OptionsScreen = () => {
+
+    const [selectedColor, setSelectedColor] = useState('#3db2ff');
+    const handleColorChange = (color) => {
+        setSelectedColor(color);
+        alert(`Color selected: ${color}`)
+      };
+
+    function onColorChange(color){
+     console.log("pressed");   
+     navigation.navigate('ColorScreen')
+  
+
+    }
+
+    const Item = ({title , color}) => (
+        <Pressable style={[styles.item, { backgroundColor: color }]} onPress={onColorChange}>
+          <Text style={styles.title}>{title}</Text>
+        </Pressable>
+      );
+  const navigation = useNavigation();
+  function onSelectSwitch(index){
+    if(index ===1){
+      alert("You Have Chosen : Outdoors Mode");
+      console.log("outdoors")
+      navigation.navigate("MainScreen" , {
+      mode:"Outdoors"
+      })
+    }
+    else if(index ===2){
+      console.log("indoors")
+      alert("You Have Chosen : Indoors Mode");
+      navigation.navigate("MainScreen" , {
+        mode:"Indoors"
+        })
+    }
+    
+    }
+    function onPressClear(){
+    
+          console.log("All")
+          navigation.navigate("MainScreen" , {
+          mode:"All"
+          })
+        }
+        
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [isFocus, setIsFocus] = useState(false);
- const {t} = useTranslation()
+ //const {t} = useTranslation()
   return (
     <SafeAreaView style={{ flex: 1, paddingTop: 20 }}>
         
       <View style={styles.container}>
-        <Text style={styles.optionsText}>{t("Options")}</Text>
+        <Text style={styles.optionsText}>Options</Text>
         <View style={styles.optionContainer}>
           <View style={styles.optionSection}>
-            <Text style={styles.sectionTitle}>{t('Language')}</Text>
+            <Text style={styles.sectionTitle}>Language</Text>
             <View style={styles.sectionContent}>
               <Dropdown
                 style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
@@ -100,10 +193,20 @@ const OptionsScreen = () => {
           roundCorner={true}
           option1={'Outdoors'}
           option2={'Indoors'}
+          option3={'All'}
           onSelectSwitch={onSelectSwitch}
           selectionColor={'blue'}
         />
           </View>
+        {/* <Button title = "clear Selection" onPress={onPressClear}></Button> */}
+        <View style = {styles.list}>
+        <Text style={styles.result}>Customize Results</Text>
+        <FlatList
+        data={Data}
+        renderItem={({item}) => <Item title={item.title} color={selectedColor} />}
+        keyExtractor={item => item.id}
+      />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -112,6 +215,15 @@ const OptionsScreen = () => {
 export default OptionsScreen;
 
 const styles = StyleSheet.create({
+    list:{
+        marginVertical:20,
+        
+    },
+    result:{
+        fontSize:22,
+        fontWeight:'bold',
+        marginBottom:10
+    },
   mode:{
     flexDirection:'row',
     alignContent:'space-between'
@@ -127,6 +239,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: 16,
+  },
+  item: {
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+
+  },
+  title: {
+    fontSize: 18,
+    alignSelf:'center',
+    color:'#FFF'
   },
   optionsText: {
     fontSize: 24,
@@ -171,6 +294,10 @@ const styles = StyleSheet.create({
   iconStyle: {
     width: 20,
     height: 20,
+  },
+  sectionContainer: {
+    marginTop: 70,
+    paddingHorizontal: 24,
   },
   inputSearchStyle: {
     height: 40,
