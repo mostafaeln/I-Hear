@@ -39,22 +39,13 @@ function MainScreen({route}){
   const [mode, setMode] = React.useState("All");
   useEffect(()=>{
    
-    if(route.params?.mode){
+    if(route.params?.mode && route.params?.Realtime){
       console.log("received mode : ", route.params.mode)
-      if (route.params.mode === "Indoors"){
-        setMode("indoors")
-       
-      }
-      else if (route.params.mode === "Outdoors"){
-        setMode("outdoors")
-       // console.log(" mode : ", mode);
-      }
-      else if (route.params.mode === "All"){
-        setMode("All")
-       // console.log(" mode : ", mode);
-      }
-   
+      console.log("received mode : ", route.params.Realtime)
+      setMode(route.params.mode)
+      IsRealtime( route.params.Realtime)
     }
+   
     else{
     console.log("No mode Received" )
     }
@@ -197,96 +188,100 @@ function MainScreen({route}){
           data:fileContents
         });
         if(mode=== "All") {
-        console.log("all mode is here")
-      
-        try {
-          const response = await axios.post('http://3.80.70.14/upload?mode=All', formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
+          console.log("all mode is here")
+        
+          try {
+            const response = await axios.post('http://3.80.110.109/upload?mode=All', formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              }
+            });
+            // const response = await axios.post('http://44.203.164.0/upload', formData, {
+            //   headers: {
+            //     "Content-Type": "multipart/form-data",
+            //   }
+            // });
+            //const responseData = await response.text();
+            //console.log('Response:', responseData);
+            console.log('Response:', response.data);
+            console.log(response.status)
+            setResult(true)
+            
+            
+            //setpred(response.data)
+            // const data = await response.json();
+            // console.log('Response:', data['message']);
+            if (response.status===200) {
+              console.log('File uploaded successfully');
+              setpred(response.data.prediction)
+              scheduleNotificationHandler(response.data.prediction)
+            
+            } else {
+              console.error('Failed to upload file');
             }
-          });
-          //const responseData = await response.text();
-          //console.log('Response:', responseData);
-          console.log('Response:', response.data);
-          console.log(response.status)
-          setResult(true)
-          
-          
-          //setpred(response.data)
-          // const data = await response.json();
-          // console.log('Response:', data['message']);
-          if (response.status===200) {
-            console.log('File uploaded successfully');
-            setpred(response.data.prediction)
-            scheduleNotificationHandler(response.data.prediction)
-          
-          } else {
-            console.error('Failed to upload file');
+          } catch (error) {
+            console.error('Error fetching data:', error);
+            setpred("Error")
           }
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          setpred("Error")
         }
-      }
-      else if(mode=== "indoors") {
-
+        else if(mode=== "indoors") {
+  
+          console.log("current mode" , mode)
+          try {
+            const response = await axios.post('http://3.80.110.109/upload?mode=indoors', formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              }
+            });
+            
+            //const responseData = await response.text();
+            //console.log('Response:', responseData);
+            console.log('Response:', response.data);
+            console.log(response.status)
+            setResult(true)
+            
+            
+            //setpred(response.data)
+            // const data = await response.json();
+            // console.log('Response:', data['message']);
+            if (response.status===200) {
+              console.log('File uploaded successfully');
+              setpred(response.data.prediction)
+              scheduleNotificationHandler(response.data.prediction)
+            
+            } else {
+              console.error('Failed to upload file');
+            }
+          } catch (error) {
+            console.error('Error fetching data:', error);
+            setpred("Error")
+          }
+        }
+        else if(mode=== "outdoors") {
         console.log("current mode" , mode)
-        try {
-          const response = await axios.post('http://3.80.70.14/upload?mode=indoors', formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            }
-          });
-          //const responseData = await response.text();
-          //console.log('Response:', responseData);
-          console.log('Response:', response.data);
-          console.log(response.status)
-          setResult(true)
-          
-          
-          //setpred(response.data)
-          // const data = await response.json();
-          // console.log('Response:', data['message']);
-          if (response.status===200) {
-            console.log('File uploaded successfully');
-            setpred(response.data.prediction)
-            scheduleNotificationHandler(response.data.prediction)
-          
-          } else {
-            console.error('Failed to upload file');
-          }
-        } catch (error) {
-          console.error('Error fetching data:', error);
-          setpred("Error")
-        }
-      }
-      else if(mode=== "outdoors") {
-      console.log("current mode" , mode)
-      
-        try {
-          const response = await axios.post('http://3.80.70.14/upload?mode=outdoors', formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            }
-          });
-          //const responseData = await response.text();
-          //console.log('Response:', responseData);
-          console.log('Response:', response.data);
-          console.log(response.status)
-          setResult(true)
-          
-          
-          //setpred(response.data)
-          // const data = await response.json();
-          // console.log('Response:', data['message']);
-          if (response.status===200) {
-            console.log('File uploaded successfully');
-            setpred(response.data.prediction)
-            scheduleNotificationHandler(response.data.prediction)
-          
-          } else {
-            console.error('Failed to upload file');
-          }
+        
+          try {
+            const response = await axios.post('http://3.80.110.109/upload?mode=outdoors', formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              }
+            });
+            //const responseData = await response.text();
+            //console.log('Response:', responseData);
+            console.log('Response:', response.data);
+            console.log(response.status)
+            setResult(true)
+            
+            
+            //setpred(response.data)
+            // const data = await response.json();
+            // console.log('Response:', data['message']);
+            if (response.status===200) {
+              console.log('File uploaded successfully');
+              setpred(response.data.prediction)
+              scheduleNotificationHandler(response.data.prediction)
+            
+            } 
         } catch (error) {
           console.error('Error fetching data:', error);
           setpred("Error")

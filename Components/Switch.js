@@ -8,12 +8,13 @@ const Switch = ({
   roundCorner,
   option1,
   option2,
+  option3,
   onSelectSwitch,
   selectionColor
 }) => {
   const [getSelectionMode, setSelectionMode] = useState(selectionMode);
   const [getRoundCorner, setRoundCorner] = useState(roundCorner);
-
+  
   const updatedSwitchData = val => {
     setSelectionMode(val);
     onSelectSwitch(val);
@@ -70,6 +71,26 @@ const Switch = ({
             {option2}
           </Text>
         </TouchableOpacity>
+        {option3 && (
+  <TouchableOpacity
+    activeOpacity={1}
+    onPress={() => updatedSwitchData(3)}
+    style={{
+      flex: 1,
+      backgroundColor: getSelectionMode == 3 ? selectionColor : 'white',
+      borderRadius: getRoundCorner ? 25 : 0,
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}>
+    <Text
+      style={{
+        color: getSelectionMode == 3 ? 'white' : selectionColor,
+      }}>
+      {option3}
+    </Text>
+  </TouchableOpacity>
+)}
+        
       </View>
     </View>
   );

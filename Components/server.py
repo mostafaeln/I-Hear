@@ -10,7 +10,7 @@ CORS(app)
 class_labels_all = ['Car_horn', 'Doorbell', 'Cat', 'crying', 'Dogs', 'Glass', 'Water', 'Ringtone', 'Siren']
 model_all = load_model("MobileNetV2.h5")
 
-class_labels_indoor = ['Cat', 'Dogs','Doorbell','Fire_Alarm', 'Glass', 'Ringtone', 'Water','crying' ]
+class_labels_indoor = [ 'Doorbell' ,'Cat','Fire_Alarm' ,'crying','Dogs' ,'Glass', 'Water'  ,'Ringtone' ]
 model_indoor = load_model("MobileNetV2_indoor.h5")
 
 class_labels_outdoor = ['Car_horn', 'Dogs', 'Glass', 'Ringtone', 'Siren' ]

@@ -92,9 +92,10 @@ const Data = [
      
     
     ]
-
+    
 const OptionsScreen = () => {
-
+  const [Mode, setMode] = React.useState("All");
+  const [Realtime, IsRealtime] = React.useState(false);
     const [selectedColor, setSelectedColor] = useState('#3db2ff');
     const handleColorChange = (color) => {
         setSelectedColor(color);
@@ -118,25 +119,51 @@ const OptionsScreen = () => {
     if(index ===1){
       alert("You Have Chosen : Outdoors Mode");
       console.log("outdoors")
-      navigation.navigate("MainScreen" , {
-      mode:"Outdoors"
-      })
+      setMode("outdoors")
     }
     else if(index ===2){
       console.log("indoors")
       alert("You Have Chosen : Indoors Mode");
-      navigation.navigate("MainScreen" , {
-        mode:"Indoors"
-        })
+      setMode("indoors")
+    }
+    
+    else if(index ===3){
+      console.log("All")
+      alert("You Have Chosen : All Mode");
+      setMode("All")
     }
     
     }
+    function onModeSwitch(index){
+      if(index ===2){
+        alert("You Have Chosen : Realtime Mode");
+        console.log("realtime Mode")
+        IsRealtime(true)
+        
+      }
+      else if(index ===1){
+        console.log("On Press Mode")
+        alert("You Have Chosen : On Press Mode");
+        IsRealtime(false)
+      }
+      
+      }
     function onPressClear(){
     
-          console.log("All")
+          console.log("mode : " , Mode);
+          console.log("Is realtime :" , Realtime )
+          if(Realtime==false){
           navigation.navigate("MainScreen" , {
-          mode:"All"
+          mode:Mode , 
+          Realtime:Realtime
           })
+        }
+        else if(Realtime==true){
+          navigation.navigate("MainScreenRT" , {
+          mode:Mode , 
+          Realtime:Realtime
+          })
+        }
         }
         
   const [selectedLanguage, setSelectedLanguage] = useState('en');
@@ -198,7 +225,18 @@ const OptionsScreen = () => {
           selectionColor={'blue'}
         />
           </View>
-        {/* <Button title = "clear Selection" onPress={onPressClear}></Button> */}
+          <View style ={styles.mode}>
+            <Text style={styles.text}>Select Mode</Text>
+            <Switch
+          selectionMode={1}
+          roundCorner={true}
+          option1={'On Press'}
+          option2={'RealTime'}
+          onSelectSwitch={onModeSwitch}
+          selectionColor={'#89CFF0'}
+        />
+          </View>
+        <Button title = "Save Selection" onPress={onPressClear}></Button>
         <View style = {styles.list}>
         <Text style={styles.result}>Customize Results</Text>
         <FlatList
@@ -226,7 +264,8 @@ const styles = StyleSheet.create({
     },
   mode:{
     flexDirection:'row',
-    alignContent:'space-between'
+    alignContent:'space-between',
+    marginBottom:30
   },
   text:{
     fontSize:18 , 
