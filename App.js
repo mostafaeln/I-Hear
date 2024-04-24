@@ -10,7 +10,12 @@ import OptionsScreen from './Screens/OptionsScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ColorScreen from './Screens/ColorScreen';
 import MainScreenRS from './Screens/MainScreenRealtime';
+import { useTranslation } from 'react-i18next';
+
+
 export default function App() {
+  const {t} = useTranslation();
+
   const MainStack = createNativeStackNavigator();
   const OptionsStack = createNativeStackNavigator();
   const ColorStack = createNativeStackNavigator();
@@ -55,7 +60,7 @@ export default function App() {
         name="Home"
         component={MainStackScreen}
         options={{
-          title: 'Home',
+          title:t('Home'),
           tabBarIcon: () => (
             <Ionicons
               name="md-home"
@@ -68,7 +73,7 @@ export default function App() {
         name="Options"
         component={OptionsStackScreen}
         options={{
-          title: 'Options',
+          title:t('Options'),
           tabBarIcon: () => (
             <Ionicons
               name="md-options"
