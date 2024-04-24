@@ -21,7 +21,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.mostafaeln.IHear"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -30,7 +31,6 @@
       [
         "expo-notifications",
         {
-          
           "icon": "./local/Images/sound.png",
           "color": "#ffffff",
           "sounds": [
@@ -38,6 +38,11 @@
           ]
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d058135b-39f4-4e7a-b409-ecbae731085a"
+      }
+    }
   }
 }

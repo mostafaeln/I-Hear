@@ -8,7 +8,6 @@ import { Audio } from 'expo-av';
 import * as Sharing from 'expo-sharing';
 //import * as tf from '@tensorflow/tfjs';
 //import { fetch, bundleResourceIO } from '@tensorflow/tfjs-react-native';
-import { Player } from 'react-native-audio-toolkit';
 import axios  from "axios";
 //import RNFetchBlob from 'rn-fetch-blob';
 import { Permissions } from 'expo';
@@ -16,6 +15,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Notifications from 'expo-notifications';
 import { FontAwesome5 , AntDesign , MaterialCommunityIcons , FontAwesome6 , MaterialIcons    } from '@expo/vector-icons'
 import Constants from 'expo-constants';
+import { useTranslation } from "react-i18next";
 //import RNFS from 'react-native-fs';
 
 function MainScreen({route}){
@@ -37,21 +37,32 @@ function MainScreen({route}){
   
   }
   const [mode, setMode] = React.useState("All");
+  const [ColorData ,SetColorData ] =React.useState([]);
+  const [Realtime, IsRealtime] = React.useState(false);
+  const colorArray = [];
+
   useEffect(()=>{
-   
-    if(route.params?.mode && route.params?.Realtime){
+    SetColorData(colorArray);
+   console.log("entered main screen use effect")
+    if(route.params?.mode ||route.params?.Realtime ||route.params?.Data ){
       console.log("received mode : ", route.params.mode)
       console.log("received mode : ", route.params.Realtime)
+      console.log("received colors : ", route.params.Data)
       setMode(route.params.mode)
       IsRealtime( route.params.Realtime)
+      route.params.Data.forEach(color => {
+        colorArray.push(color);
+      });
+      console.log("color Data" , colorArray)
+      SetColorData(colorArray);
     }
-   
+    
     else{
     console.log("No mode Received" )
     }
 
     //console.log(" mode : ", mode); 
-   } , [route.params?.mode])
+   } , [route.params?.mode] )
     const navigation=useNavigation()
     const [pressedtext , setpressedtext]= useState("Click To Record");
     const [pred , setpred]= useState("");
@@ -60,10 +71,12 @@ function MainScreen({route}){
     const [message, setMessage] = React.useState("");
     const [Result , setResult]=useState(false);
     const [images , setImages]=useState(null);
+    const [color , setColor] = useState("#3db2ff")
     function PredictionImage(response) {
       // Assuming setImage is obtained from useState hook
       console.log(response.pred);
       if (response.pred === "Car_horn") {
+        setColor(colorArray[0]);
          return(
           //<Image style={styles.soundimage} source={require("../Images/carhorn.png") } />
           <AntDesign style ={styles.ionstyle} name="car" size={50} color="black" />)
@@ -78,6 +91,7 @@ function MainScreen({route}){
           //setImages(require("../Images/sound.png"));
       }
       else if (response.pred  === "Ringtone") {
+        setColor(colorArray[7]);
         return(
           //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
           <FontAwesome5  style ={styles.ionstyle} name="music" size={50} color="black" />
@@ -85,6 +99,7 @@ function MainScreen({route}){
          ;
         }
         else if (response.pred  === "crying") {
+          setColor(colorArray[5]);
           return(
             //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
             <FontAwesome5  style ={styles.ionstyle} name="sad-cry" size={50} color="black" />
@@ -92,6 +107,7 @@ function MainScreen({route}){
            ;
           }
           else if (response.pred  === "Water") {
+            setColor(colorArray[9]);
             return(
               //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
               <FontAwesome5  style ={styles.ionstyle} name="water" size={50} color="black" />
@@ -99,6 +115,7 @@ function MainScreen({route}){
              ;
             }
             else if (response.pred  === "Fire_Alarm") {
+              setColor(colorArray[6]);
               return(
                 //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
                 <FontAwesome5  style ={styles.ionstyle} name="fire-extinguisher" size={50} color="black" />
@@ -106,6 +123,7 @@ function MainScreen({route}){
                ;
               }
             else if (response.pred  === "Siren") {
+              setColor(colorArray[8]);
               return(
                 //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
                 <MaterialCommunityIcons style ={styles.ionstyle} name="alarm-light" size={50} color="black" />
@@ -113,6 +131,7 @@ function MainScreen({route}){
                ;
               }
               else if (response.pred  === "Cat") {
+                setColor(colorArray[1]);
                 return(
                   //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
                   <FontAwesome6 style ={styles.ionstyle} name="cat" size={50} color="black" />
@@ -120,6 +139,7 @@ function MainScreen({route}){
                  ;
                 }
                 else if (response.pred  === "Doorbell") {
+                  setColor(colorArray[3]);
                   return(
                     //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
                     <MaterialCommunityIcons  style ={styles.ionstyle} name="doorbell" size={50} color="black" />
@@ -128,11 +148,12 @@ function MainScreen({route}){
                    ;
                   }
                   else if (response.pred  === "Glass") {
-                    // return(
+                    setColor(colorArray[4]);
+                    return(
                  
-                    //   <Image style={styles.soundimage} source={require("glass.png") } />
-                    //   )
-                    //  ;
+                      <Image style={styles.soundimage} source={require("../Images/glass.png") } />
+                      )
+                     ;
                     }
       else {
       return(
@@ -214,6 +235,15 @@ function MainScreen({route}){
             if (response.status===200) {
               console.log('File uploaded successfully');
               setpred(response.data.prediction)
+              const prediction = predMappings[response.data.prediction];
+              // Set the color using setColor if it's defined
+              console.log(prediction)
+              console.log(ColorData[1]);
+              if (prediction.color !== undefined) {
+                setColor(prediction.color);
+                console.log(prediction.color);
+             
+              }
               scheduleNotificationHandler(response.data.prediction)
             
             } else {
@@ -247,6 +277,12 @@ function MainScreen({route}){
             if (response.status===200) {
               console.log('File uploaded successfully');
               setpred(response.data.prediction)
+              const prediction = predMappings[response.data.prediction];
+              // Set the color using setColor if it's defined
+              if (prediction.color !== undefined) {
+                setColor(prediction.color);
+                console.log(prediction.color);
+              }
               scheduleNotificationHandler(response.data.prediction)
             
             } else {
@@ -279,6 +315,14 @@ function MainScreen({route}){
             if (response.status===200) {
               console.log('File uploaded successfully');
               setpred(response.data.prediction)
+              
+              const prediction = predMappings[response.data.prediction];
+              // Set the color using setColor if it's defined
+              if (prediction.color !== undefined) {
+                
+                setColor(prediction.color);
+                console.log(prediction.color);
+              }
               scheduleNotificationHandler(response.data.prediction)
             
             } 
@@ -331,7 +375,7 @@ function MainScreen({route}){
           
   
           setRecording(recording);
-          setpressedtext("Recording")
+          setpressedtext(t("Recording"))
         } else {
           setMessage("Please grant permission to app to access microphone");
         }
@@ -342,7 +386,7 @@ function MainScreen({route}){
   
     async function stopRecording() {
       setRecording(undefined);
-      setpressedtext("Start Recording")
+      setpressedtext(t('Start Recording'))
       await recording.stopAndUnloadAsync();
   
       let updatedRecordings = [...recordings];
@@ -375,10 +419,10 @@ function MainScreen({route}){
       
         return (
           <View style={styles.row}>
-            <Text style={styles.texting}> Recording - {lastRecording.duration}</Text>
-            <Button style={styles.button} onPress={() => lastRecording.sound.replayAsync()} title="Play" />
-            <Button style={styles.button} onPress={() => Sharing.shareAsync(lastRecording.file)} title="Share" />
-            <Button style={styles.button} onPress={handleButtonPress}  title="Predict" />
+            <Text style={styles.texting}>{t('Record')} - {lastRecording.duration}</Text>
+            <Button style={styles.button} onPress={() => lastRecording.sound.replayAsync()} title={t('Play')} />
+            <Button style={styles.button} onPress={() => Sharing.shareAsync(lastRecording.file)} title={t('Share')} />
+            <Button style={styles.button} onPress={handleButtonPress}  title={t('Predict')} />
           </View>
         );
       }
@@ -399,6 +443,22 @@ function MainScreen({route}){
     // }
     // navigation.navigate("Recording")
     // }
+    const {t} = useTranslation();
+    const predMappings = {
+      Car_horn: { color: ColorData[0], icon: 'car' },
+      Dogs: { color: ColorData[2], icon: 'dog' },
+      Ringtone: { color: ColorData[7], icon: 'music' },
+      crying: { color: ColorData[5], icon: 'sad-cry' },
+      Water: { color: ColorData[9], icon: 'water' },
+      Fire_Alarm: { color: ColorData[6], icon: 'fire-extinguisher' },
+      Siren: { color: ColorData[8], icon: 'alarm-light' },
+      Cat: { color: ColorData[1], icon: 'cat' },
+      Doorbell: { color: ColorData[3], icon: 'doorbell' },
+      Glass: { color: ColorData[4], imageSource: require("../Images/glass.png") }
+    };
+    
+    // Get the corresponding color and icon or image source based on response.pred
+    const predMapping = predMappings[pred];
   return (
     <View style={styles.home}>
     <Image
@@ -452,10 +512,15 @@ function MainScreen({route}){
     
     </View>
     {Result ? (
-  <View style={styles.output}>
+  <View style={[styles.output, { backgroundColor: color }]}>
     <Text style={styles.outputText}>The Sound Surrounding you is</Text>
     <View style={styles.sound}>
-      {PredictionImage({pred})}
+    {predMapping?.icon && (
+      <FontAwesome5 style={styles.ionstyle} name={predMapping.icon} size={50} color="black" />
+    )}
+    {predMapping?.imageSource && (
+      <Image style={styles.soundimage} source={predMapping.imageSource} />
+    )}
       <Text style={styles.resulttext}>{pred}</Text>
     </View>
   </View>
@@ -785,7 +850,7 @@ const styles = StyleSheet.create({
     },
     output:{
         alignItems:'center',
-        backgroundColor:'#3db2ff',
+        //backgroundColor:'#3db2ff',
         top:350,
         height:200,
         width:500,

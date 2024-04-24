@@ -6,7 +6,6 @@ import { StatusBar } from 'expo-status-bar';
 import { useState , useEffect } from 'react';
 import { Audio } from 'expo-av';
 import * as Sharing from 'expo-sharing';
-import { Player } from 'react-native-audio-toolkit';
 import axios  from "axios";
 import { Permissions } from 'expo';
 import * as FileSystem from 'expo-file-system';
@@ -20,8 +19,9 @@ function MainScreenRT({route}){
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
-      shouldPlaySound: true,
+      shouldPlaySound: false,
       shouldSetBadge: false,
+      shouldPlayVibration: true,
     }),
   });
   function scheduleNotificationHandler(response){

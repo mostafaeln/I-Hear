@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState  }   from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, Button , FlatList, Pressable} from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
 //import { NativeModules } from 'react-native';
-//import i18next from '../src/i18n.config';
-//import { useTranslation } from 'react-i18next';
+import i18next from '../src/i18n.config';
+import { useTranslation } from 'react-i18next';
 import Switch from '../Components/Switch';
 import { useNavigation } from '@react-navigation/native'
 import { ColorPicker } from 'react-native-color-picker'
 import { SliderBase } from '@react-native-community/slider';
+import { useEffect } from 'react';
 
 const languageOptions = [
   { label: 'English', value: 'en' },
@@ -18,102 +19,145 @@ const languageOptions = [
   { label: 'Arabic', value: 'ar' },
   { label: 'Italy', value: 'it'}
 ];
-// function changelanguage(language){
-//     if(language==="en") {
-//         i18next.changeLanguage('en')
-//     }
-//     else if(language==="ar") {
-//         i18next.changeLanguage('ar')
-//     }
-//     else if (language==="de"){
-//       i18next.changeLanguage('de')
-//     }
-//     else if (language==="it"){
-//       i18next.changeLanguage('it')
-//     }
-//     else if (language==="es"){
-//       i18next.changeLanguage('es')
-//     }
-//     else if (language==="fr"){
-//       i18next.changeLanguage('fr')
-//     }
-// }
-const Data = [
-    {
-        id: '1',
-        title: 'Car Horn',
-        color:'#3db2ff'
-      },
-      {
-        id: '2',
-        title: 'Cat',
-        color:'#3db2ff'
-      },
-      {
-        id: '3',
-        title: 'Dog',
-        color:'#3db2ff'
-      },
-      {
-        id: '4',
-        title: 'Doorbell',
-        color:'#3db2ff'
-      },
-      {
-        id: '5',
-        title: 'Glass',
-        color:'#3db2ff'
-      },
-      {
-        id: '6',
-        title: 'crying',
-        color:'#3db2ff'
-      },
-      {
-        id: '7',
-        title: 'Fire Alarm',
-        color:'#3db2ff'
-      },
-      {
-        id: '8',
-        title: 'Ringtone',
-        color:'#3db2ff' 
+function changelanguage(language){
+    if(language==="en") {
+        i18next.changeLanguage('en')
+    }
+    else if(language==="ar") {
+        i18next.changeLanguage('ar')
+    }
+    else if (language==="de"){
+      i18next.changeLanguage('de')
+    }
+    else if (language==="it"){
+      i18next.changeLanguage('it')
+    }
+    else if (language==="es"){
+      i18next.changeLanguage('es')
+    }
+    else if (language==="fr"){
+      i18next.changeLanguage('fr')
+    }
+}
+const data = [
+  {
+      id: '1',
+      title: 'Car Horn',
+      color:'#3db2ff'
     },
-      {
-        id: '9',
-        title: 'Siren',
-        color:'#3db2ff'
-      },
-      {
-        id: '10',
-        title: 'Water',
-        color:'#3db2ff'
-      },
-     
+    {
+      id: '2',
+      title: 'Cat',
+      color:'#3db2ff'
+    },
+    {
+      id: '3',
+      title: 'Dog',
+      color:'#3db2ff'
+    },
+    {
+      id: '4',
+      title: 'Doorbell',
+      color:'#3db2ff'
+    },
+    {
+      id: '5',
+      title: 'Glass',
+      color:'#3db2ff'
+    },
+    {
+      id: '6',
+      title: 'crying',
+      color:'#3db2ff'
+    },
+    {
+      id: '7',
+      title: 'Fire Alarm',
+      color:'#3db2ff'
+    },
+    {
+      id: '8',
+      title: 'Ringtone',
+      color:'#3db2ff' 
+  },
+    {
+      id: '9',
+      title: 'Siren',
+      color:'#3db2ff'
+    },
+    {
+      id: '10',
+      title: 'Water',
+      color:'#3db2ff'
+    },
+   
+  
+  ]
     
-    ]
-    
-const OptionsScreen = () => {
+const OptionsScreen = ({route}) => {
+  const [Data , setData] =React.useState(data );
   const [Mode, setMode] = React.useState("All");
   const [Realtime, IsRealtime] = React.useState(false);
-    const [selectedColor, setSelectedColor] = useState('#3db2ff');
-    const handleColorChange = (color) => {
-        setSelectedColor(color);
-        alert(`Color selected: ${color}`)
-      };
-
-    function onColorChange(color){
-     console.log("pressed");   
-     navigation.navigate('ColorScreen')
-  
+  const {t} = useTranslation()
+  useEffect(() => {
+    if (route.params?.color && route.params?.id) {
+      setData(data);
+      const { color, id } = route.params;
+      const updatedData =updateItemColor(id, color);
+      console.log("updated" , updatedData)
+      setData(updatedData);
+    
 
     }
+  }, [route.params]);
+  const saveDataToState = (updatedData) => {
+    // Update the state with the new data
+    setData(updatedData);
+  };
+  const updateItemColor = (id, colour) => {
+   
+    
+    const index = data.findIndex(item => item.id === id);
+  
+    // If the item with the specified id is found
+    if (index !== -1) {
+      // Create a copy of the data array
+      const newData = [...data];
+      
+      // Update the color property of the item at the found index
+      newData[index].color = colour;
+      
+      // Optionally, if data is stored in the component state, update the state
+      // setData(newData);
+     
+      // Return the updated data array
+      return newData;
+    } else {
+      // If the item with the specified id is not found, return the original data array
+      return data;
+    }
+  };
+  
 
-    const Item = ({title , color}) => (
-        <Pressable style={[styles.item, { backgroundColor: color }]} onPress={onColorChange}>
-          <Text style={styles.title}>{title}</Text>
-        </Pressable>
-      );
+  const renderItem = ({ item }) => (
+    <Item
+      id={item.id}
+      title={item.title}
+      color={item.color}
+    />
+  );
+
+  const Item = ({ id, title, color }) => (
+    <Pressable style={[styles.item, { backgroundColor: color }]} onPress={() => onColorChange(id)}>
+      <Text style={styles.title}>{title}</Text>
+    </Pressable>
+  );
+
+  const onColorChange = (id) => {
+    navigation.navigate('ColorScreen', {
+      id: id
+    });
+  };
   const navigation = useNavigation();
   function onSelectSwitch(index){
     if(index ===1){
@@ -149,19 +193,22 @@ const OptionsScreen = () => {
       
       }
     function onPressClear(){
-    
+      const colors = Data.map(item => item.color);
           console.log("mode : " , Mode);
           console.log("Is realtime :" , Realtime )
+          console.log("colors :" , colors )
           if(Realtime==false){
           navigation.navigate("MainScreen" , {
           mode:Mode , 
-          Realtime:Realtime
+          Realtime:Realtime ,
+          Data:colors
           })
         }
         else if(Realtime==true){
           navigation.navigate("MainScreenRT" , {
           mode:Mode , 
-          Realtime:Realtime
+          Realtime:Realtime,
+          Data :colors
           })
         }
         }
@@ -241,8 +288,9 @@ const OptionsScreen = () => {
         <Text style={styles.result}>Customize Results</Text>
         <FlatList
         data={Data}
-        renderItem={({item}) => <Item title={item.title} color={selectedColor} />}
+        renderItem={renderItem }
         keyExtractor={item => item.id}
+        virtualized={false}
       />
         </View>
       </View>
@@ -255,6 +303,7 @@ export default OptionsScreen;
 const styles = StyleSheet.create({
     list:{
         marginVertical:20,
+        flex:1
         
     },
     result:{

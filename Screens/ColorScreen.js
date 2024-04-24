@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, Button , FlatList, Pressable} from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -11,9 +11,17 @@ import { TriangleColorPicker , ColorPicker } from 'react-native-color-picker'
 
 
 
-function ColorScreen() {
-    
-    
+function ColorScreen({route}) {
+    const [idd , setId] = React.useState(-1)
+  useEffect(()=>{
+   
+    if(route.params?.id){
+      console.log("received id : ", route.params.id)
+     setId(route.params.id);
+    }
+    else{
+    console.log("No color Received" )
+    }})
       const [color, setColor] = useState('#3db2ff');
       const navigation=useNavigation();
       const onColorChange = color => {
@@ -27,11 +35,15 @@ function ColorScreen() {
       const onColorSelection = color=>{
        console.log("selected color" ,color)
        alert("color Selected" , color)
-       navigation.goBack();
+       navigation.navigate('OptionsScreen' , {
+        id:idd,
+        color:color
+       });
       }
       return (
         <View style={{flex: 1, padding: 45, backgroundColor: '#212021'}}>
         <Text style={{color: 'white'}}>React Native Color Picker - Controlled</Text>
+        <Text style={{color: 'white'}}>{idd}</Text>
         <TriangleColorPicker
           color={color}
           onColorChange={onColorChange}
