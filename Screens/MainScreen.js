@@ -512,9 +512,10 @@ function MainScreen({route}){
     
     </View>
     {Result ? (
-  <View style={[styles.output, { backgroundColor: color }]}>
-    <Text style={styles.outputText}>The Sound Surrounding you is</Text>
-    <View style={styles.sound}>
+  <View style={{width: '100%',    justifyContent: 'center',
+  alignItems: 'center',
+}}>
+    <View style={[styles.sound, { backgroundColor: color }]}>
     {predMapping?.icon && (
       <FontAwesome5 style={styles.ionstyle} name={predMapping.icon} size={50} color="black" />
     )}
@@ -607,6 +608,8 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   ionstyle:{
+    top:6,
+    // alignItems:'center',
     marginLeft:20,
   },
   iconPosition: {
@@ -687,7 +690,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   ihear1Icon: {
-    marginTop: -359,
+    marginTop: -340,
     marginLeft: -180,
     width: 130,
     height: 75,
@@ -841,12 +844,17 @@ const styles = StyleSheet.create({
   },
   
     sound:{
+      alignItems:'center',
         backgroundColor:'#FFF',
         alignItems:'flex-start',
+        top:350,
         marginTop:30,
-        height:50,
-        width:500,
-        flexDirection:'row'
+        height:70,
+        width:300,
+        flexDirection:'row',
+        borderRadius: 25,
+        borderWidth: 1,
+        borderColor: '#fff',      
     },
     output:{
         alignItems:'center',
@@ -866,7 +874,8 @@ const styles = StyleSheet.create({
     },
     resulttext:{
       color :'black' ,
-      fontSize:18 ,
+      fontSize:20 ,
+      fontWeight: "bold",
       left:80,
       alignSelf:'center'
     },
