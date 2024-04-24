@@ -522,7 +522,7 @@ function MainScreen({route}){
     {predMapping?.imageSource && (
       <Image style={styles.soundimage} source={predMapping.imageSource} />
     )}
-      <Text style={styles.resulttext}>{pred}</Text>
+      <Text style={styles.resulttext}>{t(pred)}</Text>
     </View>
   </View>
 ) : null}  
