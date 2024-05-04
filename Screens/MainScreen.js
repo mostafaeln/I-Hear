@@ -8,7 +8,6 @@ import { Audio } from 'expo-av';
 import * as Sharing from 'expo-sharing';
 //import * as tf from '@tensorflow/tfjs';
 //import { fetch, bundleResourceIO } from '@tensorflow/tfjs-react-native';
-import { Player } from 'react-native-audio-toolkit';
 import axios  from "axios";
 //import RNFetchBlob from 'rn-fetch-blob';
 import { Permissions } from 'expo';
@@ -16,9 +15,10 @@ import * as FileSystem from 'expo-file-system';
 import * as Notifications from 'expo-notifications';
 import { FontAwesome5 , AntDesign , MaterialCommunityIcons , FontAwesome6 , MaterialIcons    } from '@expo/vector-icons'
 import Constants from 'expo-constants';
+import { useTranslation } from "react-i18next";
 //import RNFS from 'react-native-fs';
 
-function MainScreen(){
+function MainScreen({route}){
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -36,6 +36,33 @@ function MainScreen(){
   })
   
   }
+  const [mode, setMode] = React.useState("All");
+  const [ColorData ,SetColorData ] =React.useState([]);
+  const [Realtime, IsRealtime] = React.useState(false);
+  const colorArray = [];
+
+  useEffect(()=>{
+    SetColorData(colorArray);
+   console.log("entered main screen use effect")
+    if(route.params?.mode ||route.params?.Realtime ||route.params?.Data ){
+      console.log("received mode : ", route.params.mode)
+      console.log("received mode : ", route.params.Realtime)
+      console.log("received colors : ", route.params.Data)
+      setMode(route.params.mode)
+      IsRealtime( route.params.Realtime)
+      route.params.Data.forEach(color => {
+        colorArray.push(color);
+      });
+      console.log("color Data" , colorArray)
+      SetColorData(colorArray);
+    }
+    
+    else{
+    console.log("No mode Received" )
+    }
+
+    //console.log(" mode : ", mode); 
+   } , [route.params?.mode] )
     const navigation=useNavigation()
     const [pressedtext , setpressedtext]= useState("Click To Record");
     const [pred , setpred]= useState("");
@@ -44,10 +71,12 @@ function MainScreen(){
     const [message, setMessage] = React.useState("");
     const [Result , setResult]=useState(false);
     const [images , setImages]=useState(null);
+    const [color , setColor] = useState("#3db2ff")
     function PredictionImage(response) {
       // Assuming setImage is obtained from useState hook
       console.log(response.pred);
       if (response.pred === "Car_horn") {
+        setColor(colorArray[0]);
          return(
           //<Image style={styles.soundimage} source={require("../Images/carhorn.png") } />
           <AntDesign style ={styles.ionstyle} name="car" size={50} color="black" />)
@@ -62,6 +91,7 @@ function MainScreen(){
           //setImages(require("../Images/sound.png"));
       }
       else if (response.pred  === "Ringtone") {
+        setColor(colorArray[7]);
         return(
           //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
           <FontAwesome5  style ={styles.ionstyle} name="music" size={50} color="black" />
@@ -69,6 +99,7 @@ function MainScreen(){
          ;
         }
         else if (response.pred  === "crying") {
+          setColor(colorArray[5]);
           return(
             //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
             <FontAwesome5  style ={styles.ionstyle} name="sad-cry" size={50} color="black" />
@@ -76,13 +107,23 @@ function MainScreen(){
            ;
           }
           else if (response.pred  === "Water") {
+            setColor(colorArray[9]);
             return(
               //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
               <FontAwesome5  style ={styles.ionstyle} name="water" size={50} color="black" />
               )
              ;
             }
+            else if (response.pred  === "Fire_Alarm") {
+              setColor(colorArray[6]);
+              return(
+                //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
+                <FontAwesome5  style ={styles.ionstyle} name="fire-extinguisher" size={50} color="black" />
+                )
+               ;
+              }
             else if (response.pred  === "Siren") {
+              setColor(colorArray[8]);
               return(
                 //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
                 <MaterialCommunityIcons style ={styles.ionstyle} name="alarm-light" size={50} color="black" />
@@ -90,6 +131,7 @@ function MainScreen(){
                ;
               }
               else if (response.pred  === "Cat") {
+                setColor(colorArray[1]);
                 return(
                   //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
                   <FontAwesome6 style ={styles.ionstyle} name="cat" size={50} color="black" />
@@ -97,6 +139,7 @@ function MainScreen(){
                  ;
                 }
                 else if (response.pred  === "Doorbell") {
+                  setColor(colorArray[3]);
                   return(
                     //<Image style={styles.soundimage} source={require("../Images/dog.png") } />
                     <MaterialCommunityIcons  style ={styles.ionstyle} name="doorbell" size={50} color="black" />
@@ -105,6 +148,7 @@ function MainScreen(){
                    ;
                   }
                   else if (response.pred  === "Glass") {
+                    setColor(colorArray[4]);
                     return(
                  
                       <Image style={styles.soundimage} source={require("../Images/glass.png") } />
@@ -164,35 +208,129 @@ function MainScreen(){
           type: 'audio/wav',
           data:fileContents
         });
+        if(mode=== "All") {
+          console.log("all mode is here")
         
-        try {
-          const response = await axios.post('http://192.168.1.7:5000/upload', formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
+          try {
+            const response = await axios.post('http://3.80.110.109/upload?mode=All', formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              }
+            });
+            // const response = await axios.post('http://44.203.164.0/upload', formData, {
+            //   headers: {
+            //     "Content-Type": "multipart/form-data",
+            //   }
+            // });
+            //const responseData = await response.text();
+            //console.log('Response:', responseData);
+            console.log('Response:', response.data);
+            console.log(response.status)
+            setResult(true)
+            
+            
+            //setpred(response.data)
+            // const data = await response.json();
+            // console.log('Response:', data['message']);
+            if (response.status===200) {
+              console.log('File uploaded successfully');
+              setpred(response.data.prediction)
+              const prediction = predMappings[response.data.prediction];
+              // Set the color using setColor if it's defined
+              console.log(prediction)
+              console.log(ColorData[1]);
+              if (prediction.color !== undefined) {
+                setColor(prediction.color);
+                console.log(prediction.color);
+             
+              }
+              scheduleNotificationHandler(response.data.prediction)
+            
+            } else {
+              console.error('Failed to upload file');
             }
-          });
-          //const responseData = await response.text();
-          //console.log('Response:', responseData);
-          console.log('Response:', response.data);
-          console.log(response.status)
-          setResult(true)
-          
-          
-          //setpred(response.data)
-          // const data = await response.json();
-          // console.log('Response:', data['message']);
-          if (response.status===200) {
-            console.log('File uploaded successfully');
-            setpred(response.data.prediction)
-            scheduleNotificationHandler(response.data.prediction)
-           
-          } else {
-            console.error('Failed to upload file');
+          } catch (error) {
+            console.error('Error fetching data:', error);
+            setpred("Error")
           }
+        }
+        else if(mode=== "indoors") {
+  
+          console.log("current mode" , mode)
+          try {
+            const response = await axios.post('http://3.80.110.109/upload?mode=indoors', formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              }
+            });
+            
+            //const responseData = await response.text();
+            //console.log('Response:', responseData);
+            console.log('Response:', response.data);
+            console.log(response.status)
+            setResult(true)
+            
+            
+            //setpred(response.data)
+            // const data = await response.json();
+            // console.log('Response:', data['message']);
+            if (response.status===200) {
+              console.log('File uploaded successfully');
+              setpred(response.data.prediction)
+              const prediction = predMappings[response.data.prediction];
+              // Set the color using setColor if it's defined
+              if (prediction.color !== undefined) {
+                setColor(prediction.color);
+                console.log(prediction.color);
+              }
+              scheduleNotificationHandler(response.data.prediction)
+            
+            } else {
+              console.error('Failed to upload file');
+            }
+          } catch (error) {
+            console.error('Error fetching data:', error);
+            setpred("Error")
+          }
+        }
+        else if(mode=== "outdoors") {
+        console.log("current mode" , mode)
+        
+          try {
+            const response = await axios.post('http://3.80.110.109/upload?mode=outdoors', formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              }
+            });
+            //const responseData = await response.text();
+            //console.log('Response:', responseData);
+            console.log('Response:', response.data);
+            console.log(response.status)
+            setResult(true)
+            
+            
+            //setpred(response.data)
+            // const data = await response.json();
+            // console.log('Response:', data['message']);
+            if (response.status===200) {
+              console.log('File uploaded successfully');
+              setpred(response.data.prediction)
+              
+              const prediction = predMappings[response.data.prediction];
+              // Set the color using setColor if it's defined
+              if (prediction.color !== undefined) {
+                
+                setColor(prediction.color);
+                console.log(prediction.color);
+              }
+              scheduleNotificationHandler(response.data.prediction)
+            
+            } 
         } catch (error) {
           console.error('Error fetching data:', error);
           setpred("Error")
         }
+      }
 
             
       
@@ -208,6 +346,7 @@ function MainScreen(){
     
     async function startRecording() {
       try {
+        setResult(false);
         const permission = await Audio.requestPermissionsAsync();
         const { status } = await Notifications.requestPermissionsAsync();
         if (status !== 'granted') {
@@ -236,7 +375,7 @@ function MainScreen(){
           
   
           setRecording(recording);
-          setpressedtext("Recording")
+          setpressedtext(t("Recording"))
         } else {
           setMessage("Please grant permission to app to access microphone");
         }
@@ -247,7 +386,7 @@ function MainScreen(){
   
     async function stopRecording() {
       setRecording(undefined);
-      setpressedtext("Start Recording")
+      setpressedtext(t('Start Recording'))
       await recording.stopAndUnloadAsync();
   
       let updatedRecordings = [...recordings];
@@ -280,10 +419,10 @@ function MainScreen(){
       
         return (
           <View style={styles.row}>
-            <Text style={styles.texting}> Recording - {lastRecording.duration}</Text>
-            <Button style={styles.button} onPress={() => lastRecording.sound.replayAsync()} title="Play" />
-            <Button style={styles.button} onPress={() => Sharing.shareAsync(lastRecording.file)} title="Share" />
-            <Button style={styles.button} onPress={handleButtonPress}  title="Predict" />
+            <Text style={styles.texting}>{t('Record')} - {lastRecording.duration}</Text>
+            <Button style={styles.button} onPress={() => lastRecording.sound.replayAsync()} title={t('Play')} />
+            <Button style={styles.button} onPress={() => Sharing.shareAsync(lastRecording.file)} title={t('Share')} />
+            <Button style={styles.button} onPress={handleButtonPress}  title={t('Predict')} />
           </View>
         );
       }
@@ -304,6 +443,22 @@ function MainScreen(){
     // }
     // navigation.navigate("Recording")
     // }
+    const {t} = useTranslation();
+    const predMappings = {
+      Car_horn: { color: ColorData[0], icon: 'car' },
+      Dogs: { color: ColorData[2], icon: 'dog' },
+      Ringtone: { color: ColorData[7], icon: 'music' },
+      crying: { color: ColorData[5], icon: 'sad-cry' },
+      Water: { color: ColorData[9], icon: 'water' },
+      Fire_Alarm: { color: ColorData[6], icon: 'fire-extinguisher' },
+      Siren: { color: ColorData[8], icon: 'alarm-light' },
+      Cat: { color: ColorData[1], icon: 'cat' },
+      Doorbell: { color: ColorData[3], icon: 'doorbell' },
+      Glass: { color: ColorData[4], imageSource: require("../Images/glass.png") }
+    };
+    
+    // Get the corresponding color and icon or image source based on response.pred
+    const predMapping = predMappings[pred];
   return (
     <View style={styles.home}>
     <Image
@@ -357,11 +512,17 @@ function MainScreen(){
     
     </View>
     {Result ? (
-  <View style={styles.output}>
-    <Text style={styles.outputText}>The Sound Surrounding you is</Text>
-    <View style={styles.sound}>
-      {PredictionImage({pred})}
-      <Text style={styles.resulttext}>{pred}</Text>
+  <View style={{width: '100%',    justifyContent: 'center',
+  alignItems: 'center',
+}}>
+    <View style={[styles.sound, { backgroundColor: color }]}>
+    {predMapping?.icon && (
+      <FontAwesome5 style={styles.ionstyle} name={predMapping.icon} size={50} color="black" />
+    )}
+    {predMapping?.imageSource && (
+      <Image style={styles.soundimage} source={predMapping.imageSource} />
+    )}
+      <Text style={styles.resulttext}>{t(pred)}</Text>
     </View>
   </View>
 ) : null}  
@@ -447,6 +608,8 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   ionstyle:{
+    top:6,
+    // alignItems:'center',
     marginLeft:20,
   },
   iconPosition: {
@@ -527,7 +690,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   ihear1Icon: {
-    marginTop: -359,
+    marginTop: -340,
     marginLeft: -180,
     width: 130,
     height: 75,
@@ -681,16 +844,21 @@ const styles = StyleSheet.create({
   },
   
     sound:{
+      alignItems:'center',
         backgroundColor:'#FFF',
         alignItems:'flex-start',
+        top:350,
         marginTop:30,
-        height:50,
-        width:500,
-        flexDirection:'row'
+        height:70,
+        width:300,
+        flexDirection:'row',
+        borderRadius: 25,
+        borderWidth: 1,
+        borderColor: '#fff',      
     },
     output:{
         alignItems:'center',
-        backgroundColor:'#3db2ff',
+        //backgroundColor:'#3db2ff',
         top:350,
         height:200,
         width:500,
@@ -706,7 +874,8 @@ const styles = StyleSheet.create({
     },
     resulttext:{
       color :'black' ,
-      fontSize:18 ,
+      fontSize:20 ,
+      fontWeight: "bold",
       left:80,
       alignSelf:'center'
     },

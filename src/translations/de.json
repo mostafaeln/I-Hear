@@ -1,0 +1,25 @@
+{
+    "Home": "Startseite",
+    "Click to Record": "Klicken Sie zum Aufnehmen",
+    "Start Recording": "Aufnahme starten",
+    "Recording": "Aufnahme läuft",
+    "Record": "Aufnehmen",
+    "Options": "Optionen",
+    "Nearby Sound": "Umgebungsgeräusch",
+
+    "Language": "Sprache",
+    "English": "Englisch",
+    "Arabic": "Arabisch",
+    "French": "Französisch",
+    "Spanish": "Spanisch",
+
+    "Car_horn": "Autohupe",
+    "Doorbell": "Türklingel",
+    "Cat": "Katze",
+    "crying": "Weinen",
+    "Dogs": "Hund",
+    "Glass": "Glas",
+    "Water": "Wasser",
+    "Ringtone": "Klingelton",
+    "Siren": "Sirene"
+}

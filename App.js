@@ -8,63 +8,87 @@ import MainScreen from './Screens/MainScreen';
 import Recording from './Components/Recording';
 import OptionsScreen from './Screens/OptionsScreen';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import ColorScreen from './Screens/ColorScreen';
+import MainScreenRS from './Screens/MainScreenRealtime';
+import { useTranslation } from 'react-i18next';
+
+
 export default function App() {
-  const stack = createNativeStackNavigator();
-  const Tab = createBottomTabNavigator();
-  function ScreensBT(){
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="MainScreen" component={MainScreen}  options={{
-        title:'Home',
-        tabBarIcon: () => { 
-          return ( 
-            <Ionicons 
-              name="md-home"
-              size={24} 
-            
-            /> 
-          ); 
-        }, 
-        headerShown:false , tabBarStyle: { position: 'absolute'  }}}/>
-      <Tab.Screen name="OptionsScreen" component={OptionsScreen}  options={{
-        title:'Options',
-        tabBarIcon: () => { 
-          return ( 
-            <Ionicons 
-              name="md-options"
-              size={24} 
-            
-            /> 
-          ); 
-        }, 
-        headerShown:false , tabBarStyle: { position: 'absolute'  }}}/>  
-      {/* <Tab.Screen name="Pairing" component={PairingScreen} />
-      <Tab.Screen name="Options" component={OptionsScreen} />
-      <Tab.Screen name="Customization" component={CustomizationScreen} /> */}
-    </Tab.Navigator>
-  );
-  }
-  return (
-    //<View style={styles.container}>
-    
-   
-    <NavigationContainer>
-     
-      <stack.Navigator screenOptions={{
-      
-      }}>
-      <stack.Screen name="ScreensBT" component={ScreensBT} options={{headerShown:false}} />
-      <stack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown:false}}></stack.Screen>
-      
-        <stack.Screen name="MainScreen" component={MainScreen} options={{headerShown:false}} ></stack.Screen>
-        <stack.Screen name="Recording" component={Recording} options={{headerShown:false}} ></stack.Screen>
-       
-      </stack.Navigator>
+  const {t} = useTranslation();
+
+  const MainStack = createNativeStackNavigator();
+  const OptionsStack = createNativeStackNavigator();
+  const ColorStack = createNativeStackNavigator();
+  function MainStackScreen() {
+    return (
+      <MainStack.Navigator screenOptions={{ headerShown: false }}>
+        <MainStack.Screen name="MainScreen" component={MainScreen} />
+        <MainStack.Screen name="MainScreenRT" component={MainScreenRS} />
         
-      </NavigationContainer>
+        {/* Add other screens to the MainStack if needed */}
+      </MainStack.Navigator>
+    );
+  }
+  function ColorStackScreen() {
+    return (
+      <ColorStack.Navigator screenOptions={{ headerShown: false }}>
+        <ColorStack.Screen name="ColorScreen" component={ColorScreen} />
+        {/* Add other screens to the ColorStack if needed */}
+      </ColorStack.Navigator>
+    );
+  }
+
+  function OptionsStackScreen() {
+    return (
+      <OptionsStack.Navigator screenOptions={{ headerShown: false }}>
+        <OptionsStack.Screen name="OptionsScreen" component={OptionsScreen} />
+        <OptionsStack.Screen name="ColorScreen" component={ColorScreen} />
+        
+        {/* Add other screens to the OptionsStack if needed */}
+      </OptionsStack.Navigator>
+    );
+  }
+
+  // Create your bottom tab navigator for screens A, B, and C
+  const Tab = createBottomTabNavigator();
+
+  return (
+    <NavigationContainer>
+
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Screen
+        name="Home"
+        component={MainStackScreen}
+        options={{
+          title:t('Home'),
+          tabBarIcon: () => (
+            <Ionicons
+              name="md-home"
+              size={24}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Options"
+        component={OptionsStackScreen}
+        options={{
+          title:t('Options'),
+          tabBarIcon: () => (
+            <Ionicons
+              name="md-options"
+              size={24}
+            />
+          ),
+        }}
+      />
+      {/* Add other tabs to the bottom tab navigator */}
+    </Tab.Navigator>
+    
+    {/* Include the ColorStackScreen component outside the Tab.Navigator */}
   
-     // <StatusBar style="auto" />
-    //</View>
+  </NavigationContainer>
+  
   );
 }
 

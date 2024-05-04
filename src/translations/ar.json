@@ -1,0 +1,27 @@
+{ 
+  "Home":"الرئيسية",
+  "Click to Record" : "اضغط للتسجيل",   
+  "Start Recording" : "ابدأ التسجيل",
+    "Recording": "يتم التسجيل",
+     "Record" : "التسجيل",
+     "Options" : "الاعدادات",
+     "Nearby Sound": "صوت حولك",
+    "Play":"تشغيل",
+    "Predict":"توقع",
+    "Share":"نشر",
+    "Language": "اللغة",
+    "English": "الانجليزية",
+    "Arabic": "العربية",
+    "French": "الفرنسية",
+    "Spanish": "الاسبانية",
+
+    "Car_horn": "بوق السيارة",
+    "Doorbell": "جرس الباب",
+    "Cat": "قطة",
+    "crying": "بكاء",
+    "Dogs": "كلب",
+    "Glass": "زجاج",
+    "Water": "ماء",
+    "Ringtone": "نغمة الرنين",
+    "Siren": "صفارة إنذار"  
+  }
